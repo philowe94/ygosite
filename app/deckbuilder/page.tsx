@@ -1,10 +1,9 @@
 import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import DeckBuilder from '@/components/DeckBuilder'
 
 export default function DeckBuilderPage() {
   return (
-    <main className="flex-1">
+    <main className="flex-1 md:ml-64">
       <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">
@@ -16,7 +15,6 @@ export default function DeckBuilderPage() {
 
         <DeckBuilder />
       </div>
-      <Footer />
     </main>
   )
 }

@@ -23,6 +23,11 @@ export interface CardSet {
   set_price: string
 }
 
+export interface MiscInfo {
+  konami_id?: number
+  [key: string]: unknown
+}
+
 export interface YuGiOhCard {
   id: number
   name: string
@@ -40,6 +45,8 @@ export interface YuGiOhCard {
   card_sets?: CardSet[]
   card_images: CardImage[]
   card_prices?: CardPrice[]
+  misc_info?: MiscInfo[]
+  ygoprodeck_url?: string
   banlist_info?: {
     ban_tcg?: string
     ban_ocg?: string

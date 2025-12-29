@@ -5,7 +5,6 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -40,7 +39,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex-1">
+    <main className="flex-1 md:ml-64">
       <Header />
       <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="bg-white rounded-lg shadow-lg p-8">
@@ -100,7 +99,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </main>
   )
 }

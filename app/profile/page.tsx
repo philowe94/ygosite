@@ -4,7 +4,6 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import Link from 'next/link'
 
 interface SavedDeck {
@@ -68,14 +67,13 @@ export default function ProfilePage() {
 
   if (status === 'loading' || loading) {
     return (
-      <main className="flex-1">
+      <main className="flex-1 md:ml-64">
         <Header />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
             <p className="text-gray-600">Loading...</p>
-          </div>
         </div>
-        <Footer />
+      </div>
       </main>
     )
   }
@@ -89,7 +87,7 @@ export default function ProfilePage() {
   }, 0)
 
   return (
-    <main className="flex-1">
+    <main className="flex-1 md:ml-64">
       <Header />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="bg-white rounded-lg shadow-lg p-8">
@@ -182,7 +180,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      <Footer />
     </main>
   )
 }

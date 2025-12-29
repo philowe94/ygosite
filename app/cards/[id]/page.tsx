@@ -1,9 +1,7 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import CardImage from '@/components/CardImage'
+import CardImageToggle from '@/components/CardImageToggle'
 import { YuGiOhCard } from '@/types/card'
-import { getCardImageUrl } from '@/lib/image-utils'
 
 async function getCard(id: string): Promise<YuGiOhCard | null> {
   try {
@@ -25,15 +23,21 @@ async function getCard(id: string): Promise<YuGiOhCard | null> {
 
 export default async function CardDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams: Promise<{ name?: string }>
 }) {
   const { id } = await params
+  const { name } = await searchParams
   const card = await getCard(id)
+  
+  // Preserve search params in back link
+  const backUrl = name ? `/cards?name=${encodeURIComponent(name)}` : '/cards'
 
   if (!card) {
     return (
-      <main className="flex-1">
+      <main className="flex-1 md:ml-64">
         <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="max-w-4xl mx-auto">
@@ -41,7 +45,7 @@ export default async function CardDetailPage({
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Card Not Found</h1>
             <p className="text-gray-600 mb-8">The card you're looking for doesn't exist.</p>
             <Link
-              href="/cards"
+              href={backUrl}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-block"
             >
               Browse All Cards
@@ -49,51 +53,82 @@ export default async function CardDetailPage({
           </div>
           </div>
         </div>
-        <Footer />
       </main>
     )
   }
 
-  const externalUrl = card.card_images[0]?.image_url || card.card_images[0]?.image_url_small || ''
-  const imageUrl = externalUrl ? getCardImageUrl(card.id, externalUrl) : ''
+
+  // External links
+  const cardNameEncoded = encodeURIComponent(card.name)
+  const konamiId = card.misc_info?.[0]?.konami_id || card.id
+  const yugipediaUrl = `https://yugipedia.com/wiki/${cardNameEncoded.replace(/%20/g, '_')}`
+  const ygoResourcesUrl = `https://db.ygoresources.com/card#${konamiId}`
+  const ygoprodeckUrl = card.ygoprodeck_url || `https://ygoprodeck.com/card/${card.id}`
+  const tcgplayerUrl = `https://www.tcgplayer.com/search/yugioh/product?q=${cardNameEncoded}`
 
   return (
-    <main className="flex-1">
+    <main className="flex-1 md:ml-64 h-screen overflow-hidden flex flex-col">
       <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-6xl mx-auto">
-        <Link
-          href="/cards"
-          className="text-blue-600 hover:text-blue-800 mb-6 inline-block"
-        >
-          ← Back to Cards
-        </Link>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Card Image */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            {imageUrl ? (
-              <div className="relative w-full aspect-[2/3] bg-gray-100 rounded-lg overflow-hidden">
-                <CardImage
-                  src={imageUrl}
-                  fallbackSrc={externalUrl}
-                  alt={card.name}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
-                />
-              </div>
-            ) : (
-              <div className="w-full aspect-[2/3] bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
-                No Image Available
-              </div>
-            )}
-          </div>
+      <div className="flex-1 overflow-hidden flex flex-col">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex-shrink-0">
+          <Link
+            href={backUrl}
+            className="text-blue-600 hover:text-blue-800 inline-block"
+          >
+            ← Back to Cards
+          </Link>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+            <div className="max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Card Image with Toggle */}
+          <CardImageToggle card={card} />
 
           {/* Card Details */}
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-6">{card.name}</h1>
+          <div className="bg-white rounded-lg shadow-lg p-8 overflow-y-auto max-h-full">
+            <div className="flex items-start justify-between mb-4">
+              <h1 className="text-4xl font-bold text-gray-900">{card.name}</h1>
+            </div>
+
+            {/* External Links */}
+            <div className="mb-6 pb-4 border-b">
+              <h2 className="text-sm font-semibold text-gray-700 mb-2">External Links</h2>
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href={yugipediaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded text-sm hover:bg-blue-100 transition-colors"
+                >
+                  Yugipedia
+                </a>
+                <a
+                  href={ygoResourcesUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 bg-purple-50 text-purple-700 rounded text-sm hover:bg-purple-100 transition-colors"
+                >
+                  YGOResources
+                </a>
+                <a
+                  href={ygoprodeckUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 bg-green-50 text-green-700 rounded text-sm hover:bg-green-100 transition-colors"
+                >
+                  YGOPRODeck
+                </a>
+                <a
+                  href={tcgplayerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 bg-orange-50 text-orange-700 rounded text-sm hover:bg-orange-100 transition-colors"
+                >
+                  TCGPlayer
+                </a>
+              </div>
+            </div>
 
             <div className="space-y-4 mb-6">
               <div className="flex flex-wrap gap-2">
@@ -193,10 +228,11 @@ export default async function CardDetailPage({
               </div>
             )}
           </div>
-        </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <Footer />
     </main>
   )
 }
