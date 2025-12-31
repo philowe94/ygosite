@@ -87,13 +87,23 @@ export default function CardsContent() {
       {/* Search Input and View Toggle */}
       <div className="sticky top-0 z-10 bg-white border-b p-4">
         <div className="max-w-7xl mx-auto flex gap-4 items-center">
-          <input
-            type="text"
-            value={searchValue}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Search cards..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded"
-          />
+          <div className="flex-1 relative">
+            <svg
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Text Search"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded"
+            />
+          </div>
           {/* View Mode Toggle */}
           <div className="flex gap-2 border border-gray-300 rounded overflow-hidden">
             <button
