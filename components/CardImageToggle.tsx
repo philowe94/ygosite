@@ -50,7 +50,7 @@ export default function CardImageToggle({ card }: CardImageToggleProps) {
       {/* Card Image */}
       <div className="bg-white rounded-lg shadow-lg p-6">
         {imageUrl ? (
-          <div className="relative w-full aspect-[2/3] bg-gray-100 rounded-lg overflow-hidden">
+          <div className="relative w-full aspect-[2/3] rounded-lg overflow-hidden">
             <CardImage
               src={imageUrl}
               fallbackSrc={fallbackUrl}
@@ -62,7 +62,7 @@ export default function CardImageToggle({ card }: CardImageToggleProps) {
             />
           </div>
         ) : (
-          <div className="w-full aspect-[2/3] bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+          <div className="w-full aspect-[2/3] rounded-lg flex items-center justify-center text-gray-400">
             No Image Available
           </div>
         )}

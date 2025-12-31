@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface CardImageProps {
   src: string
@@ -24,6 +24,12 @@ export default function CardImage({
 }: CardImageProps) {
   const [imageError, setImageError] = useState(false)
   const [currentSrc, setCurrentSrc] = useState(src)
+
+  // Update currentSrc when src prop changes
+  useEffect(() => {
+    setCurrentSrc(src)
+    setImageError(false)
+  }, [src])
 
   const handleError = () => {
     if (!imageError && fallbackSrc && currentSrc !== fallbackSrc) {
